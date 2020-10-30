@@ -1,37 +1,70 @@
-var ctx = document.getElementById('lineChart');
-var myChart = new Chart(ctx, {
-    type: 'line',
+const ctx = document.getElementById("testChart");
+
+// Global Options
+Chart.defaults.global.defaultFontFamily = "Lato";
+Chart.defaults.global.animation.onComplete = () => {
+  Chart.defaults;
+};
+const xLabels = [];
+const payout = [];
+
+createChart();
+
+async function createChart() {
+  await getData();
+  let myChart = new Chart(ctx, {
+    type: "bar",
     data: {
-        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-        datasets: [{
-            label: '# of Votes',
-            data: [12, 19, 3, 5, 2, 3],
-            backgroundColor: [
-                'rgba(255, 99, 132, 0.2)',
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(255, 206, 86, 0.2)',
-                'rgba(75, 192, 192, 0.2)',
-                'rgba(153, 102, 255, 0.2)',
-                'rgba(255, 159, 64, 0.2)'
-            ],
-            borderColor: [
-                'rgba(255, 99, 132, 1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(75, 192, 192, 1)',
-                'rgba(153, 102, 255, 1)',
-                'rgba(255, 159, 64, 1)'
-            ],
-            borderWidth: 1
-        }]
+      labels: xLabels,
+      datasets: [
+        {
+          label: "2018 Payout %",
+          data: payout,
+          borderWidth: 1,
+        },
+      ],
     },
     options: {
-        scales: {
-            yAxes: [{
-                ticks: {
-                    beginAtZero: true
-                }
-            }]
-        }
-    }
-});
+      animation: {
+        // animateScale: false,
+      },
+      scales: {
+        yAxes: [
+          {
+            ticks: {
+              beginAtZero: true,
+            },
+          },
+        ],
+      },
+    },
+  });
+}
+
+async function getData() {
+  const response = await fetch("AC Slot Machine Data 2018 - Sheet1.csv");
+  const data = await response.text();
+  //   const column = [];
+
+  const table = data.split("\n").slice(1);
+  table.forEach((row) => {
+    const column = row.split(",");
+    const casino = column[0];
+    const payoutPercentage = column[1];
+
+    xLabels.push(casino);
+    payout.push(parseFloat(payoutPercentage));
+  });
+}
+
+// const payoutSlotMachine1Cents = column[1];
+// const payoutSlotMachine5Cents = column[2];
+// const payoutSlotMachine25Cents = column[3];
+// const payoutSlotMachine50Cents = column[4];
+// const payoutSlotMachine1Dollar = column[5];
+// const payoutSlotMachine5Dollar = column[6];
+// const payoutSlotMachine25Dollar = column[7];
+// const payoutSlotMachine50Dollar = column[8];
+// const payoutSlotMachine100Dollar = column[9];
+// const payoutSlotMachineMulti = column[10];
+// const payoutSlotMachineOther = column[11];
