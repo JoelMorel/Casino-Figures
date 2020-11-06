@@ -1,71 +1,132 @@
-const ctx = document.getElementById("testChart");
+$(window).scroll(function () {
+  if ($(document).scrollTop() > 50) {
+    $(".nav").addClass("affix");
+    console.log("OK");
+  } else {
+    $(".nav").removeClass("affix");
+  }
+});
 
-// Global Options
-Chart.defaults.global.defaultFontFamily = "Lato";
-Chart.defaults.global.animation.onComplete = () => {
-  Chart.defaults;
-};
+function myFunc(vars) {
+  return vars;
+}
 
-createChart();
+$(".navTrigger").click(function () {
+  $(this).toggleClass("active");
+  console.log("Clicked menu");
+  $("#mainListDiv").toggleClass("show_list");
+  $("#mainListDiv").fadeIn();
+});
 
-async function createChart() {
-  const data = await getData();
-  let myChart = new Chart(ctx, {
-    type: "bar",
-    data: {
-      labels: data.xLabels,
-      datasets: [
-        {
-          label: "2018 Payout %",
-          data: data.yLabels,
-          borderWidth: 1,
-        },
-      ],
-    },
-    options: {
-      animation: {
-        // animateScale: false,
-      },
-      scales: {
-        yAxes: [
-          {
-            ticks: {
-              beginAtZero: false,
-            },
+/*
+	Full Motion by TEMPLATED
+	templated.co @templatedco
+	Released for free under the Creative Commons Attribution 3.0 license (templated.co/license)
+*/
+
+(function ($) {
+  skel.breakpoints({
+    xlarge: "(max-width: 1680px)",
+    large: "(max-width: 1280px)",
+    medium: "(max-width: 980px)",
+    small: "(max-width: 736px)",
+    xsmall: "(max-width: 480px)",
+  });
+
+  $(function () {
+    var $window = $(window),
+      $body = $("body");
+
+    // Disable animations/transitions until the page has loaded.
+    $body.addClass("is-loading");
+
+    $window.on("load", function () {
+      window.setTimeout(function () {
+        $body.removeClass("is-loading");
+      }, 100);
+    });
+
+    // Fix: Placeholder polyfill.
+    $("form").placeholder();
+
+    // Banner.
+    var $banner = $("#banner");
+
+    if ($banner.length > 0) {
+      // IE fix.
+      if (skel.vars.IEVersion < 12) {
+        $window.on("resize", function () {
+          var wh = $window.height() * 0.6,
+            bh = $banner.height();
+
+          $banner.css("height", "auto");
+
+          window.setTimeout(function () {
+            if (bh < wh) $banner.css("height", wh + "px");
+          }, 0);
+        });
+
+        $window.on("load", function () {
+          $window.triggerHandler("resize");
+        });
+      }
+
+      // Video check.
+      var video = $banner.data("video");
+
+      if (video)
+        $window.on("load.banner", function () {
+          // Disable banner load event (so it doesn't fire again).
+          $window.off("load.banner");
+
+          // Append video if supported.
+          if (
+            !skel.vars.mobile &&
+            !skel.breakpoint("large").active &&
+            skel.vars.IEVersion > 9
+          )
+            $banner.append(
+              '<video autoplay loop><source src="' +
+                video +
+                '.mp4" type="video/mp4" /><source src="' +
+                video +
+                '.webm" type="video/webm" /></video>'
+            );
+        });
+
+      // More button.
+      $banner.find(".more").addClass("scrolly");
+    }
+
+    // Scrolly.
+    $(".scrolly").scrolly();
+
+    // Poptrox.
+    $window.on("load", function () {
+      var $thumbs = $(".thumbnails");
+
+      if ($thumbs.length > 0)
+        $thumbs.poptrox({
+          onPopupClose: function () {
+            $body.removeClass("is-covered");
           },
-        ],
-      },
-    },
+          onPopupOpen: function () {
+            $body.addClass("is-covered");
+          },
+          baseZIndex: 10001,
+          useBodyOverflow: false,
+          overlayColor: "#222226",
+          overlayOpacity: 0.75,
+          popupLoaderText: "",
+          fadeSpeed: 500,
+          usePopupDefaultStyling: false,
+          windowMargin: skel.breakpoint("small").active ? 5 : 50,
+        });
+    });
+
+    // Initial scroll.
+    $window.on("load", function () {
+      $window.trigger("scroll");
+    });
   });
-}
-
-async function getData() {
-  const xLabels = [];
-  const yLabels = [];
-
-  const response = await fetch("/AC Slot Machine Data 2018 - Sheet1.csv");
-  const data = await response.text();
-
-  const table = data.split("\n").slice(1);
-  table.forEach((row) => {
-    const column = row.split(",");
-    const casino = column[0];
-    const payoutPercentage = column[1];
-
-    xLabels.push(casino);
-    yLabels.push(100 - parseFloat(payoutPercentage));
-  });
-  return { xLabels, yLabels };
-}
-
-// const payoutSlotMachine1Cents = column[1];
-// const payoutSlotMachine5Cents = column[2];
-// const payoutSlotMachine25Cents = column[3];
-// const payoutSlotMachine50Cents = column[4];
-// const payoutSlotMachine1Dollar = column[5];
-// const payoutSlotMachine5Dollar = column[6];
-// const payoutSlotMachine25Dollar = column[7];
-// const payoutSlotMachine50Dollar = column[8];
-// const payoutSlotMachine100Dollar = column[9];
-// const payoutSlotMachineMulti = column[10];
-// const payoutSlotMachineOther = column[11];
+})(jQuery);
