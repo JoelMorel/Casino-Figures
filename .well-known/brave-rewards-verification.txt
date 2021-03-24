@@ -1,0 +1,4 @@
+This is a Brave Rewards publisher verification file.
+
+Domain: casinofigures.com
+Token: f13189a582dafd9e7c9305b1766c5245e874d88907f70cc1ceb98f39d0447e3c
